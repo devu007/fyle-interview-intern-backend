@@ -66,3 +66,21 @@ def h_principal():
     }
 
     return headers
+
+
+@pytest.fixture
+def setup_assignments(client, h_principal):
+    # Create assignments in the database for testing
+    response = client.post(
+        '/assignments',
+        json={
+            'title': 'Test Assignment',
+            'content': 'This is a test assignment',
+            'state': 'DRAFT'
+        },
+        headers=h_principal
+    )
+    assert response.status_code == 201
+
+    # Return the created assignment
+    return [response.json['data']]
